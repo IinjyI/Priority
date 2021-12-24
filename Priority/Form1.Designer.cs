@@ -217,6 +217,10 @@
             this.Priority.UseVisualStyleBackColor = true;
             this.Priority.Click += new System.EventHandler(this.Priority_Click);
             // 
+            // executionTimer
+            // 
+            this.executionTimer.Tick += new System.EventHandler(this.executionTimer_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

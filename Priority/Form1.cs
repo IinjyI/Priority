@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,17 +16,34 @@ namespace Priority
 
        static int numberOfProcesses = 4;
         Process[] processes = new Process[numberOfProcesses];
-        static void bubbleSort(Process[] pList)
+
+        void schedule(int processNo)
+        {
+            executionTimer.Interval = processes[processNo].processBurstTime * 1000;
+            cpu.Text = "process #" + processes[processNo].processNumber + " is executing";
+            ReadyQueue.Items.Remove($"process #{processes[processNo].processNumber} burst time:" + processes[processNo].processBurstTime);
+        }
+
+        static void sort(Process[] pArray)
         {
             for (int i=0; i < numberOfProcesses - 1; i++)
             {
                 for (int j=0; j<numberOfProcesses-i-1; j++)
                 {
-                    if (pList[j].processPriority > pList[j + 1].processPriority)
+                    if (pArray[j].processPriority > pArray[j + 1].processPriority)
                     {
-                        Process temp = pList[j];
-                        pList[j] = pList[j + 1];
-                        pList[j + 1] = temp;
+                        Process temp = pArray[j];
+                        pArray[j] = pArray[j + 1];
+                        pArray[j + 1] = temp;
+                    }
+                    if(pArray[j].processPriority == pArray[j + 1].processPriority)
+                    {
+                        if (pArray[j].processBurstTime > pArray[j + 1].processBurstTime)
+                        {
+                            Process temp = pArray[j];
+                            pArray[j] = pArray[j + 1];
+                            pArray[j + 1] = temp;
+                        }
                     }
                 }
             }
@@ -52,13 +70,19 @@ namespace Priority
                 ReadyQueue.Items.Add($"process #{i+1} burst time:"+processes[i].processBurstTime);
             }
 
-            bubbleSort(processes);
-            var sortedProcesses = processes.ToList();
-            executionTimer.Interval = sortedProcesses[0].processBurstTime*1000;
-           for (int i=0; i<numberOfProcesses; i++)
+            sort(processes);
+
+            executionTimer.Start();
+
+        }
+
+        private void executionTimer_Tick(object sender, EventArgs e)
+        {
+            for (int i = 0; i < numberOfProcesses; i++)
             {
-                cpu.Text = "process #"+sortedProcesses[0].processNumber+" is executing";
+                schedule(i);
             }
+
         }
     }
 
