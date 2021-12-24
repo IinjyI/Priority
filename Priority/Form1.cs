@@ -21,7 +21,8 @@ namespace Priority
         {
             executionTimer.Interval = processes[processNo].processBurstTime * 1000;
             cpu.Text = "process #" + processes[processNo].processNumber + " is executing";
-            ReadyQueue.Items.Remove($"process #{processes[processNo].processNumber} burst time:" + processes[processNo].processBurstTime);
+            ReadyQueue.Items.RemoveAt(0);
+
         }
 
         static void sort(Process[] pArray)
@@ -65,12 +66,13 @@ namespace Priority
             processes[2] = process3;
             processes[3] = process4;
 
-            for(int i = 0; i<numberOfProcesses; i++)
-            {
-                ReadyQueue.Items.Add($"process #{i+1} burst time:"+processes[i].processBurstTime);
-            }
 
             sort(processes);
+
+            for (int i = 0; i < numberOfProcesses; i++)
+            {
+                ReadyQueue.Items.Add("Process #"+processes[i].processNumber + $" burst time:" + processes[i].processBurstTime);
+            }
 
             executionTimer.Start();
 
@@ -78,9 +80,22 @@ namespace Priority
 
         private void executionTimer_Tick(object sender, EventArgs e)
         {
-            for (int i = 0; i < numberOfProcesses; i++)
+            executionTimer.Interval = processes[0].processBurstTime*1000;
+            if (ReadyQueue.Items[0].Equals("Process #" + processes[0].processNumber + $" burst time:" + processes[0].processBurstTime))
             {
-                schedule(i);
+                schedule(0);
+            }
+            else if (ReadyQueue.Items[0].Equals("Process #" + processes[1].processNumber + $" burst time:" + processes[1].processBurstTime))
+            {
+                schedule(1);
+            }
+            else if (ReadyQueue.Items[0].Equals("Process #" + processes[2].processNumber + $" burst time:" + processes[2].processBurstTime))
+            {
+                schedule(2);
+            }
+            else if (ReadyQueue.Items[0].Equals("Process #" + processes[3].processNumber + $" burst time:" + processes[3].processBurstTime))
+            {
+                schedule(3);
             }
 
         }
