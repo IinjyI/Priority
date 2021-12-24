@@ -50,6 +50,7 @@
             this.p4Priority = new System.Windows.Forms.TextBox();
             this.Priority = new System.Windows.Forms.Button();
             this.executionTimer = new System.Windows.Forms.Timer(this.components);
+            this.analysis = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // result
@@ -57,7 +58,7 @@
             this.result.HideSelection = false;
             this.result.Location = new System.Drawing.Point(543, 77);
             this.result.Name = "result";
-            this.result.Size = new System.Drawing.Size(217, 167);
+            this.result.Size = new System.Drawing.Size(350, 170);
             this.result.TabIndex = 44;
             this.result.UseCompatibleStateImageBehavior = false;
             // 
@@ -209,7 +210,7 @@
             // 
             // Priority
             // 
-            this.Priority.Location = new System.Drawing.Point(391, 447);
+            this.Priority.Location = new System.Drawing.Point(421, 452);
             this.Priority.Name = "Priority";
             this.Priority.Size = new System.Drawing.Size(75, 23);
             this.Priority.TabIndex = 59;
@@ -221,11 +222,21 @@
             // 
             this.executionTimer.Tick += new System.EventHandler(this.executionTimer_Tick);
             // 
+            // analysis
+            // 
+            this.analysis.AutoSize = true;
+            this.analysis.Location = new System.Drawing.Point(716, 61);
+            this.analysis.Name = "analysis";
+            this.analysis.Size = new System.Drawing.Size(44, 13);
+            this.analysis.TabIndex = 60;
+            this.analysis.Text = "analysis";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(833, 502);
+            this.ClientSize = new System.Drawing.Size(941, 502);
+            this.Controls.Add(this.analysis);
             this.Controls.Add(this.Priority);
             this.Controls.Add(this.p4Priority);
             this.Controls.Add(this.p1Burst);
@@ -248,6 +259,7 @@
             this.Controls.Add(this.cpu);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,6 +287,7 @@
         private System.Windows.Forms.TextBox p4Priority;
         private System.Windows.Forms.Button Priority;
         private System.Windows.Forms.Timer executionTimer;
+        private System.Windows.Forms.Label analysis;
     }
 }
 

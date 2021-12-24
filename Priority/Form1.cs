@@ -15,6 +15,8 @@ namespace Priority
     {
 
        static int numberOfProcesses = 4;
+        int averageWaitingTime = 0;
+        int averageTurnAroundTime = 0;
         Process[] processes = new Process[numberOfProcesses];
 
         void schedule(int processNo)
@@ -48,6 +50,43 @@ namespace Priority
                     }
                 }
             }
+        }
+        void calculateWaitingTime() {
+            for (int i = 1; i < numberOfProcesses; i++)
+            {
+                processes[i].processWaitingTime = processes[i - 1].processWaitingTime + processes[i - 1].processBurstTime;
+            }
+        }
+
+        void calculateTurnAroundTime()
+        {
+            for (int i = 0; i < numberOfProcesses; i++)
+            {
+                processes[i].processTurnAroundTime = processes[i].processBurstTime + processes[i].processWaitingTime;
+            }
+        }
+        void findAverage()
+        {
+            calculateWaitingTime();
+            calculateTurnAroundTime();
+
+            int totalWaitingTime = 0;
+            int totalTurnAroundTime = 0;
+            for (int i = 0; i < numberOfProcesses; i++)
+            {
+                totalWaitingTime += processes[i].processWaitingTime;
+                totalTurnAroundTime += processes[i].processTurnAroundTime;
+                String[] row = {
+                    "Process " + processes[i].processNumber.ToString(),
+                    processes[i].processBurstTime.ToString(),
+                    processes[i].processWaitingTime.ToString(),
+                    processes[i].processTurnAroundTime.ToString()
+                };
+                var listViewItem = new ListViewItem(row);
+                result.Items.Add(listViewItem);
+            }
+             averageWaitingTime = totalWaitingTime / numberOfProcesses;
+             averageTurnAroundTime = totalTurnAroundTime / numberOfProcesses;
         }
         public Form1()
            
@@ -97,15 +136,34 @@ namespace Priority
             {
                 schedule(3);
             }
+            if (ReadyQueue.Items.Count <= 0)
+            {
+                executionTimer.Stop();
+                findAverage();
+                MessageBox.Show($"Average Waiting Time: {averageWaitingTime}\nAverage Turnaround Time: {averageTurnAroundTime}");
+            }
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            result.View = View.Details;
+            result.GridLines = true;
+            result.Columns.Add("Processes",70);
+            result.Columns.Add("Burst Time",70);
+            result.Columns.Add("Turnaround Time",120);
+            result.Columns.Add("Waiting Time",90);
 
         }
     }
 
     class Process
     {
-        public Process(int burst,int p, int n) { processBurstTime = burst; processPriority = p; processNumber = n; }
+        public Process(int burst,int p, int n, int wait=0, int turnAround=0) { processBurstTime = burst; processPriority = p; processNumber = n; processWaitingTime = wait; processTurnAroundTime = turnAround; }
         public int processBurstTime;
         public int processPriority;
         public int processNumber;
+        public int processWaitingTime;
+        public int processTurnAroundTime;
     }
 }
